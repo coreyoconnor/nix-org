@@ -3,13 +3,38 @@ with lib;
 let
   cfg = config.services.userWikis;
   sharingCfg = config.resourcesSharing;
-in {
-  options.services.userWikis =
+  userOptions =
   {
-    enable =
+    org.wiki =
     {
-      default = false;
-      type = types.uniq types.bool;
+      enable = mkOption
+      {
+        default = false;
+        type = types.uniq types.bool;
+      };
+
+      accessCode = mkOption
+      {
+        default = "public";
+        type = types.uniq types.string;
+      };
+    };
+  };
+in {
+  options =
+  {
+    services.userWikis =
+    {
+      enable =
+      {
+        default = false;
+        type = types.uniq types.bool;
+      };
+    };
+
+    users.extraUsers = mkOption
+    {
+      options = [ userOptions ];
     };
   };
 

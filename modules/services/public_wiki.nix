@@ -7,6 +7,15 @@ let
   baseConf = ./gitit.conf;
   repoPath = cfg.repoPath;
   deployConf = pkgs.writeText "gitit-deploy.conf" ''
+    address: 0.0.0.0
+    # sets the IP address on which the web server will listen.
+
+    port: 5001
+    # sets the port on which the web server will run.
+
+    wiki-title: CoreyOConnor@gmail.com
+    # the title of the wiki.
+
     base-url = http://www.${sharingCfg.primaryDomain}
 
     repository-path: ${repoPath}
@@ -24,11 +33,19 @@ let
     # css, and images).  If it does not exist, gitit will create it
     # and populate it with required scripts, stylesheets, and images.
 
+    templates-dir: ${repoPath}/templates
+    # specifies the path of the directory containing page templates.
+    # If it does not exist, gitit will create it with default templates.
+    # Users may wish to edit the templates to customize the appearance of
+    # their wiki. The template files are HStringTemplate templates.
+    # Variables to be interpolated appear between $$'s. Literal $$'s must be
+    # backslash-escaped.
+
     access-question: Code
     access-question-answers: ${cfg.accessCode}
     mime-types-file: ${pkgs.nginx}/conf/mime.types
 
-    use-cache: no
+    use-cache: yes
     cache-dir: /var/lib/gitit/cache
     # directory where rendered pages will be cached
 
@@ -41,6 +58,11 @@ let
       name = Gitit
       email = gitit@${sharingCfg.primaryDomain}
   '';
+  hasCapPublicData = user: (any (group: group == "cap-public-data") user.extraGroups);
+  # TODO: does not include "keys" of authorizedKeys attr set.
+  allPublicKeysForPublicDataUsers = concatLists (mapAttrsToList (name: user:
+      user.openssh.authorizedKeys.keyFiles
+    ) (filterAttrs hasCapPublicData config.users.extraUsers));
 in {
   options.services.publicWiki =
   {
@@ -114,6 +136,7 @@ in {
         group = "gitit";
         extraGroups = [ "cap-public-data" ];
         useDefaultShell = true;
+        openssh.authorizedKeys.keyFiles = allPublicKeysForPublicDataUsers sharingCfg.users;
       };
     };
   };

@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 with lib;
-let cfg = config.resourcesSharing;
+let
+  cfg = config.resourcesSharing;
 in {
   imports =
   [
@@ -20,24 +21,24 @@ in {
       default = [];
       type = types.listOf types.string;
       description = ''
-        Users of the organization to have their artifacts visible to other users and access
-        to org resources.
+        User names of the organization that have their artifacts visible to other users and RW access
+        to org public and private resources.
       '';
     };
 
     userWikisBasePort = mkOption
     {
-      default = 5000;
-      type = types.int;
+      default = 6000;
+      type = types.uniq types.int;
       description = ''
-        Listen port of each user's wiki is bound to 5000 + uid.
+        Listen port of each user's wiki is bound to 6000 + index in users list.
       '';
     };
 
     primaryDomain = mkOption
     {
       default = config.networking.hostName;
-      type = types.string;
+      type = types.uniq types.string;
     };
 
     secondaryDomains = mkOption
@@ -52,6 +53,7 @@ in {
     services.avahi.enable = true;
     services.avahi.nssmdns = true;
 
+  } // {
     users.extraGroups = 
     [
       { name = "cap-private-data"; }
