@@ -1,13 +1,13 @@
 { config, pkgs, lib, ... }:
 with lib;
-let cfg = config.resources_sharing;
+let cfg = config.resourcesSharing;
 in {
   imports =
   [
     ./services/http_resources_server.nix
   ];
 
-  options.resources_sharing =
+  options.resourcesSharing =
   {
     advertise = mkOption
     {
@@ -51,5 +51,11 @@ in {
   {
     services.avahi.enable = true;
     services.avahi.nssmdns = true;
+
+    users.extraGroups = 
+    [
+      { name = "cap-private-data"; }
+      { name = "cap-public-data"; }
+    ];
   };
 }

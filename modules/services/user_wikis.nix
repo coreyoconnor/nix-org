@@ -1,8 +1,10 @@
 {config, pkgs, lib, ...}:
 with lib;
-let cfg = config.services.user_wikis;
+let
+  cfg = config.services.userWikis;
+  sharingCfg = config.resourcesSharing;
 in {
-  options.services.user_wikis =
+  options.services.userWikis =
   {
     enable =
     {

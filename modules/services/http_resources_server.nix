@@ -1,13 +1,13 @@
 {config, pkgs, lib, ...}:
 with lib;
 let
-  cfg = config.services.http_resources_server;
-  sharingCfg = config.resources_sharing;
+  cfg = config.services.httpResourcesServer;
+  sharingCfg = config.resourcesSharing;
   nginxCfg = config.services.nginx;
 in {
   options.services =
   {
-    http_resources_server =
+    httpResourcesServer =
     {
       enable = mkOption
       {
@@ -17,8 +17,8 @@ in {
 
       routes = mkOption
       {
-        default = [];
-        type = types.listOf types.lines;
+        default = "";
+        type = types.lines;
       };
     };
 
@@ -52,17 +52,24 @@ in {
               listen 80;
               server_name www.${sharingCfg.primaryDomain};
 
-              ${concatStringsSep "\n" cfg.routes}
+              ${cfg.routes}
           }
 
           server {
               listen 80;
               server_name ${sharingCfg.primaryDomain}
-                  ${concatStrings sharingCfg.secondaryDomains};
+                  ${concatStringsSep " " sharingCfg.secondaryDomains}
+                  ${concatStringsSep " " (map (domain: "www." + domain) sharingCfg.secondaryDomains)};
 
               rewrite ^/(.*) http://www.${sharingCfg.primaryDomain}/$1 redirect;
           }
         }
       '';
+
+      systemd.services.nginx.serviceConfig =
+      {
+        NoNewPrivileges = "true";
+        ProtectHome = "true";
+      };
   };
 }
