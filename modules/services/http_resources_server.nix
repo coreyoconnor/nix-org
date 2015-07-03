@@ -12,7 +12,7 @@ in {
       enable = mkOption
       {
         default = false;
-        type = types.uniq types.bool;
+        type = types.bool;
       };
 
       routes = mkOption
