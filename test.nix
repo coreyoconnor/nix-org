@@ -1,5 +1,5 @@
 { system ? builtins.currentSystem, ... }:
-with import (<nixos> + "/lib/testing.nix") { inherit system; };
+with import (<nixpkgs> + "/nixos/lib/testing.nix") { inherit system; };
 let
   testConfigCommon =
   {
