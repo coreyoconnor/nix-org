@@ -37,19 +37,19 @@ in {
            name = "user_0";
            extraGroups = [ "cap-public-data" ];
            isNormalUser = true;
-           org.wiki =
+           wiki =
            {
-            enable = true;
-            accessCode = "user_0";
+             enable = true;
+             accessCode = "user_0";
            };
          }
          {
            name = "user_1";
            extraGroups = [ "cap-public-data" ];
            isNormalUser = true;
-           org.wiki =
+           wiki =
            {
-            enable = false;
+             enable = false;
            };
          }
          {

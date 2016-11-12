@@ -4,7 +4,7 @@ let
   cfg = config.services.userWikis;
   sharingCfg = config.resourcesSharing;
   allUsersList = attrValues config.users.extraUsers;
-  enabledUsersList = filter (user: user.org.wiki.enable) allUsersList;
+  enabledUsersList = filter (user: user.wiki.enable) allUsersList;
   withPorts = imap (i: user: user // { port = sharingCfg.userWikisBasePort + i; }) enabledUsersList;
   routeForUserWiki = user: ''
     location /user/${user.name}/ {
@@ -27,7 +27,7 @@ let
     baseUrl = "http://www.${sharingCfg.primaryDomain}/user/${user.name}";
     repoPath = user.home + "/wiki/data";
     runDir = user.home + "/wiki";
-    accessCode = user.org.wiki.accessCode;
+    accessCode = user.wiki.accessCode;
     defaultGitconfig = pkgs.writeText "default-${user.name}-gitconfig" ''
       # this should not show up in /var
       [user]
@@ -41,12 +41,12 @@ let
   };
   services = listToAttrs (map (user:
   {
-    name = "user-${user.name}-wiki"; 
+    name = "user-${user.name}-wiki";
     value = mkUserWikiService user;
   }) withPorts);
   userOptions =
   {
-    org.wiki =
+    wiki =
     {
       enable = mkOption
       {
@@ -73,7 +73,7 @@ in {
       };
     };
 
-    users.extraUsers = mkOption
+    users.users = mkOption
     {
       options = [ userOptions ];
     };
