@@ -1,5 +1,7 @@
-{ system ? builtins.currentSystem, ... }:
-with import (<nixpkgs> + "/nixos/lib/testing.nix") { inherit system; };
+{ system ? builtins.currentSystem
+, testing ? import dependencies/nixpkgs/nixos/lib/testing.nix { inherit system; }
+, ... }:
+with testing;
 let
   testConfigCommon =
   {
