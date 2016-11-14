@@ -9,9 +9,19 @@ let
      '';
   };
 in {
+  testBase = makeTest
+  {
+    name = "test-base";
+    machine = { config, pkgs, ... }: testConfigCommon // {
+    };
+    testScript = ''
+      startAll;
+      $machine->waitForUnit("network.target");
+    '';
+  };
   testPublicWiki = makeTest
   {
-    name = "test-public-wiki-only";
+    name = "test-public-wiki";
     machine = { config, pkgs, ... }: testConfigCommon // {
        services.publicWiki.enable = true;
     };
