@@ -1,3 +1,10 @@
 [submodule "dependencies/nixpkgs"]
 	path = dependencies/nixpkgs
 	url = git@github.com:coreyoconnor/nixpkgs.git
+[submodule "dependencies/sbt2nix"]
+	path = dependencies/sbt2nix
+	url = git@github.com:coreyoconnor/sbt2nix.git
+	branch = master
+[submodule "dependencies/sbtix"]
+	path = dependencies/sbtix
+	url = git@github.com:coreyoconnor/Sbtix.git

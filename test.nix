@@ -5,7 +5,7 @@ with testing;
 let
   testConfigCommon =
   {
-     imports = [ ./default.nix ];
+     imports = [ ./modules ];
      networking.extraHosts = ''
        127.0.0.1 www.machine
      '';
