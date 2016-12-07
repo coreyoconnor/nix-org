@@ -1,0 +1,5 @@
+#!/bin/sh
+set -ex
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")/.." && pwd )"
+feature=${1:-base}
+exec nix-build $PROJECT_DIR -A test.$feature

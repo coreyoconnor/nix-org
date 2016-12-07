@@ -3,7 +3,7 @@
 , ... }:
 with testing;
 let
-  testConfigCommon =
+  configCommon =
   {
      imports = [ ./modules ];
      networking.extraHosts = ''
@@ -11,20 +11,21 @@ let
      '';
   };
 in {
-  testBase = makeTest
+  base = makeTest
   {
     name = "test-base";
-    machine = { config, pkgs, ... }: testConfigCommon // {
+    machine = { config, pkgs, ... }: configCommon // {
     };
     testScript = ''
       startAll;
       $machine->waitForUnit("network.target");
     '';
   };
-  testPublicWiki = makeTest
+
+  publicWiki = makeTest
   {
     name = "test-public-wiki";
-    machine = { config, pkgs, ... }: testConfigCommon // {
+    machine = { config, pkgs, ... }: configCommon // {
        services.publicWiki.enable = true;
     };
 
@@ -38,10 +39,10 @@ in {
     '';
   };
 
-  testUserWikis = makeTest
+  userWikis = makeTest
   {
     name = "test-user-wikis";
-    machine = { config, pkgs, ... }: testConfigCommon // {
+    machine = { config, pkgs, ... }: configCommon // {
        services.publicWiki.enable = true;
        services.userWikis.enable = true;
        users.extraUsers= [
